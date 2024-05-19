@@ -54,14 +54,47 @@ void listar() {
     while (fread(&funcionario, sizeof(Funcionario), 1, f)) {
         printf("Nome: %s\t", funcionario.nome);
         printf("Idade: %d\t", funcionario.idade);
-        printf("Salário: %.2fR$S\n", funcionario.salario);
+        printf("Salário: %.2fR$\n", funcionario.salario);
     }
 
     fclose(f);
 }
 
 void buscar() {
-    printf("Funcionário encontrado!\n");
+    char nome[MAX_NOME];
+    printf("Digite o nome do funcionário que deseja buscar: ");
+    fgets(nome, MAX_NOME, stdin);
+    size_t tamanho = strlen(nome);
+    if (tamanho > 0 && nome[tamanho - 1] == '\n') {
+        nome[tamanho - 1] = '\0';
+    }
+
+    FILE *f = fopen(FILENAME, "rb");
+    if (f == NULL) {
+        printf("Erro ao abrir o arquivo.\n");
+        return;
+    }
+
+    Funcionario funcionario;
+    int encontrado = 0;
+    while (fread(&funcionario, sizeof(Funcionario), 1, f)) {
+        if (strcmp(funcionario.nome, nome) == 0) {
+            printf("Funcionário encontrado!\n");
+            printf("Nome: %s\t", funcionario.nome);
+            printf("Idade: %d\t", funcionario.idade);
+            printf("Salário: %.2fR$S\n", funcionario.salario);
+            printf("\n");
+            encontrado = 1;
+            break;
+        }
+    }
+
+    if (!encontrado) {
+        printf("Funcionário não encontrado.\n");
+    }
+
+    fclose(f);
+    
 }
 
 int main() {
@@ -92,4 +125,6 @@ int main() {
                 printf("Opção inválida. Tente novamente.\n");
         }
 } while (opcao != 0);
+
+    return 0;
 }
