@@ -25,6 +25,18 @@ int** multiplicar(int** matriz1, int** matriz2, int linhas_matriz1, int colunas_
     return matriz;
 }
 
+int** transpor(int** matriz, int linhas, int colunas) {
+    int** transposta = alocar(colunas, linhas);
+
+    for (int i = 0; i < colunas; i++) {
+        for (int j = 0; j < linhas; j++) {
+            transposta[i][j] = matriz[j][i];
+        }
+    }
+
+    return transposta;
+}
+
 void imprimir(int** matriz, int linhas, int colunas) {
     for (int i = 0; i < linhas; i++) {
         for (int j = 0; j < colunas; j++) {
@@ -32,6 +44,13 @@ void imprimir(int** matriz, int linhas, int colunas) {
         }
         printf("\n");
     }
+}
+
+void liberar(int** matriz, int linhas) {
+    for (int i = 0; i < linhas; i++) {
+        free(matriz[i]);
+    }
+    free(matriz);
 }
 
 
@@ -73,4 +92,16 @@ int main() {
     printf("Matriz resultante da multiplicação:\n");    
     imprimir(resultado, linhas_matriz1, colunas_matriz2);
 
+    int** matriz1_transposta = transpor(matriz1, linhas_matriz1, colunas_matriz1);
+    printf("Matriz transposta da primeira matriz:\n");
+    imprimir(matriz1_transposta, colunas_matriz1, linhas_matriz1);
+    int** matriz2_transposta = transpor(matriz2, linhas_matriz2, colunas_matriz2);
+    printf("Matriz transposta da segunda matriz:\n");
+    imprimir(matriz2_transposta, colunas_matriz2, linhas_matriz2);
+
+    liberar(matriz1, linhas_matriz1);
+    liberar(matriz2, linhas_matriz2);
+    liberar(matriz1_transposta, colunas_matriz1);
+    liberar(matriz2_transposta, colunas_matriz2);
+    liberar(resultado, linhas_matriz1);
 }
