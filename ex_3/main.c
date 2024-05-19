@@ -13,7 +13,6 @@ void clearBuffer() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
-
 void cadastrar(Produto *p) {
     printf("Digite o nome do produto: ");
     fgets(p->nome, sizeof(p->nome), stdin);
@@ -28,6 +27,13 @@ void cadastrar(Produto *p) {
     clearBuffer();
 }
 
+void mostrar(const Produto *p) {
+    printf("Nome: %s\nQuantidade: %d\nPreço: %.2f\n", p->nome, p->quantidade, p->preco);
+}
+
+float calculaTotal(const Produto *p) {
+    return p->quantidade * p->preco;
+}
 
 int main() {
     int n;
@@ -47,5 +53,16 @@ int main() {
         printf("Cadastrando o %d° produto\n", i + 1);
         cadastrar(&produtos[i]);
     }
+
+    float total = 0;
+    for (i = 0; i < n; i++) {
+        printf("%d° produto\n", i + 1);
+        mostrar(&produtos[i]);
+        total += calculaTotal(&produtos[i]);
+    }
+
+    printf("Valor total em estoque: %.2fR$\n", total);
+
+    free(produtos);
     
 }
