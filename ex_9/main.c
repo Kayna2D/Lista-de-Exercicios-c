@@ -6,12 +6,26 @@ void clearBuffer() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+int comparar(const void *a, const void *b) {
+    return (*(int *)a - *(int *)b);
+}
+
 double media(int *array, int tamanho) {
     int soma = 0;
     for (int i = 0; i < tamanho; i++) {
         soma += array[i];
     }
     return (double)soma / tamanho;
+}
+
+double mediana(int *array, int tamanho) {
+    qsort(array, tamanho, sizeof(int), comparar); 
+
+    if (tamanho % 2 == 0) {
+        return (array[tamanho / 2 - 1] + array[tamanho / 2]) / 2.0;
+    } else {
+        return array[tamanho / 2];
+    }
 }
 
 int main() {
@@ -35,6 +49,7 @@ int main() {
     }
 
     printf("Media: %.2f\n", media(array, n));
+    printf("Mediana: %.2f\n", mediana(array, n));
     free(array);
 
     
