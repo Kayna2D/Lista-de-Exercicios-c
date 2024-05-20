@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 
 void clearBuffer() {
     char c;
@@ -28,6 +29,54 @@ double mediana(int *array, int tamanho) {
     }
 }
 
+int* calcular_moda(int *array, int tamanho, int *moda_tamanho) {
+    int *freq = (int *)calloc(tamanho, sizeof(int));
+    int max_freq = 0;
+
+    qsort(array, tamanho, sizeof(int), comparar);
+
+    int cont = 1;
+    for (int i = 1; i < tamanho; i++) {
+        if (array[i] == array[i-1]) {
+            cont++;
+        } else {
+            cont = 1;
+        }
+
+        if (cont > max_freq) {
+            max_freq = cont;
+        }
+    }
+
+    int *moda = (int *)malloc(tamanho * sizeof(int));
+    int j = 0;
+    cont = 1;
+    for (int i = 1; i < tamanho; i++) {
+        if (array[i] == array[i-1]) {
+            cont++;
+        } else {
+            cont = 1;
+        }
+
+        if (cont == max_freq) {
+            if (j == 0 || moda[j-1] != array[i]) {
+                moda[j++] = array[i];
+            }
+        }
+    }
+
+    if (max_freq == 1) { 
+        free(moda);
+        moda = NULL;
+        *moda_tamanho = 0;
+    } else {
+        *moda_tamanho = j;
+    }
+
+    free(freq);
+    return moda;
+}
+
 int main() {
     int n;
 
@@ -48,9 +97,23 @@ int main() {
         clearBuffer();
     }
 
-    printf("Media: %.2f\n", media(array, n));
+    printf("Média: %.2f\n", media(array, n));
     printf("Mediana: %.2f\n", mediana(array, n));
-    free(array);
+    int moda_tamanho;
+    int *moda = calcular_moda(array, n, &moda_tamanho);
 
-    
+    if (moda_tamanho > 0) {
+        printf("Moda: ");
+        for (int i = 0; i < moda_tamanho; i++) {
+            printf("%d ", moda[i]);
+        }
+        printf("\n");
+    } else {
+        printf("Moda: Não existe.\n");
+    }
+
+    free(array);    
+    free(moda);
+
+    return 0;
 }
